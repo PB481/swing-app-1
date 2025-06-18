@@ -298,5 +298,18 @@ st.warning(
     """
 )
 
+# --- Feature: Show App Code ---
+st.markdown("---") # Add a separator
+st.header('App Source Code', divider='gray')
+
+current_script_path = Path(__file__)
+
+try:
+    with open(current_script_path, 'r') as f:
+        app_code = f.read()
+    with st.expander("Click to view the Python code for this app"):
+        st.code(app_code, language='python')
+except Exception as e:
+    st.error(f"Could not load app source code: {e}")
 st.markdown("---")
 st.markdown("Developed based on research into swing pricing mechanisms and regulatory guidelines.")
