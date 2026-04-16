@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # “””
 
 # PRODUCT MANAGEMENT COMMAND CENTER
@@ -8,7 +10,7 @@ strategic projects, commercial data, and operational friction in a fund
 administration environment.
 
 # Author: PM Command Center
-Stack: Python 3.x · Streamlit · SQLite3 · Pandas
+Stack: Python 3.x - Streamlit - SQLite3 - Pandas
 
 “””
 
@@ -32,10 +34,10 @@ DB_PATH = Path(“command_center.db”)
 APP_TITLE = “PM Command Center”
 APP_ICON = “🏛️”
 
-# Refined monotone slate palette — colour appears only where it carries meaning
+# Refined monotone slate palette – colour appears only where it carries meaning
 
 THEME = {
-# Base neutrals (light mode — easier on the eyes for long reading sessions)
+# Base neutrals (light mode – easier on the eyes for long reading sessions)
 “bg_primary”: “#f8fafc”,       # near-white app background
 “bg_card”: “#ffffff”,           # card surfaces
 “bg_card_hover”: “#f1f5f9”,     # subtle hover
@@ -49,22 +51,22 @@ THEME = {
 "text_secondary": "#475569",    # muted labels
 "text_muted": "#94a3b8",        # captions, metadata
 
-# Single neutral accent — slate-900 — used for buttons, links, emphasis
+# Single neutral accent -- slate-900 -- used for buttons, links, emphasis
 "accent": "#1e293b",            # primary interactive colour
 "accent_soft": "#334155",       # hover state
 
-# Signal colours — ONLY for semantic meaning, never decoration
+# Signal colours -- ONLY for semantic meaning, never decoration
 "signal_risk": "#991b1b",       # risk / overdue / blocked
 "signal_warn": "#92400e",       # warning / near miss / attention
 "signal_ok": "#166534",         # healthy / on track / mitigated
 "signal_info": "#1e40af",       # informational only
 
 # Backward-compat aliases so existing references still resolve
-"accent_cyan": "#1e293b",       # was cyan — now slate
-"accent_amber": "#92400e",      # was amber — now warn
-"accent_red": "#991b1b",        # was red — now risk
-"accent_green": "#166534",      # was green — now ok
-"accent_purple": "#475569",     # was purple — now muted slate
+"accent_cyan": "#1e293b",       # was cyan -- now slate
+"accent_amber": "#92400e",      # was amber -- now warn
+"accent_red": "#991b1b",        # was red -- now risk
+"accent_green": "#166534",      # was green -- now ok
+"accent_purple": "#475569",     # was purple -- now muted slate
 ```
 
 }
@@ -256,7 +258,7 @@ cur.execute("""
 
 conn.commit()
 
-# --- Schema migration: days_stuck → blocked_since for existing DBs ---
+# --- Schema migration: days_stuck -> blocked_since for existing DBs ---
 cur.execute("PRAGMA table_info(change_pipeline)")
 columns = [row[1] for row in cur.fetchall()]
 if "days_stuck" in columns and "blocked_since" not in columns:
@@ -283,7 +285,7 @@ conn.close()
 
 # =============================================================================
 
-# DATA ACCESS — cached loaders (cache clears on DB write)
+# DATA ACCESS – cached loaders (cache clears on DB write)
 
 # =============================================================================
 
@@ -313,7 +315,7 @@ return pd.DataFrame()
 # Rebuild index before searching to ensure freshness
 rebuild_rfp_fts()
 
-# FTS5 query — wrap terms for prefix matching
+# FTS5 query -- wrap terms for prefix matching
 fts_query = " OR ".join(f'"{t}"*' for t in query.strip().split() if t)
 
 sql = """
@@ -372,11 +374,11 @@ if pd.notna(row[“id”])
     for _, row in df.iterrows():
         row_id = row.get("id")
         if pd.isna(row_id) or int(row_id) not in before_map:
-            # INSERT — new row (no id or id not in before)
+            # INSERT -- new row (no id or id not in before)
             summary = _row_summary(table_name, row.to_dict())
             audit_entries.append((now_iso, table_name, "INSERT", summary, ""))
         else:
-            # Potential UPDATE — compare field by field
+            # Potential UPDATE -- compare field by field
             old_row = before_map[int(row_id)]
             changes = []
             for col in data_cols:
@@ -386,7 +388,7 @@ if pd.notna(row[“id”])
                 old_val = None if pd.isna(old_val) else old_val
                 new_val = None if pd.isna(new_val) else new_val
                 if str(old_val) != str(new_val):
-                    changes.append(f"{col}: '{old_val}' → '{new_val}'")
+                    changes.append(f"{col}: '{old_val}' -> '{new_val}'")
             if changes:
                 summary = _row_summary(table_name, row.to_dict())
                 audit_entries.append(
@@ -440,7 +442,7 @@ label_fields = {
 }
 field = label_fields.get(table_name, “”)
 label = row.get(field, “unknown”) if field else “unknown”
-return f”{table_name} → {label}”
+return f”{table_name} -> {label}”
 
 # =============================================================================
 
@@ -459,12 +461,12 @@ background-color: {THEME[‘bg_primary’]};
 }}
 
 ```
-    /* Body text — system serif/sans for legibility */
+    /* Body text -- system serif/sans for legibility */
     html, body, [class*="css"] {{
         color: {THEME['text_primary']};
     }}
 
-    /* Metric cards — clean, bordered, generous padding */
+    /* Metric cards -- clean, bordered, generous padding */
     [data-testid="stMetric"] {{
         background: {THEME['bg_card']};
         border: 1px solid {THEME['border']};
@@ -492,7 +494,7 @@ background-color: {THEME[‘bg_primary’]};
         font-size: 0.78rem;
     }}
 
-    /* Section headers — subtle, not shouty */
+    /* Section headers -- subtle, not shouty */
     .section-header {{
         color: {THEME['text_secondary']};
         font-family: 'JetBrains Mono', monospace;
@@ -506,7 +508,7 @@ background-color: {THEME[‘bg_primary’]};
         margin-top: 8px;
     }}
 
-    /* Signal badges — only for semantic meaning */
+    /* Signal badges -- only for semantic meaning */
     .badge-leaking, .badge-risk {{
         background: {THEME['signal_risk']}15;
         color: {THEME['signal_risk']};
@@ -535,7 +537,7 @@ background-color: {THEME[‘bg_primary’]};
         border: 1px solid {THEME['signal_warn']}33;
     }}
 
-    /* Sidebar — subtle separation from main area */
+    /* Sidebar -- subtle separation from main area */
     [data-testid="stSidebar"] {{
         background: {THEME['bg_card']};
         border-right: 1px solid {THEME['border']};
@@ -550,7 +552,7 @@ background-color: {THEME[‘bg_primary’]};
         border-radius: 6px;
     }}
 
-    /* Buttons — subtle, functional */
+    /* Buttons -- subtle, functional */
     .stButton > button {{
         border: 1px solid {THEME['border_strong']};
         color: {THEME['text_primary']};
@@ -585,13 +587,13 @@ background-color: {THEME[‘bg_primary’]};
         color: {THEME['bg_card']};
     }}
 
-    /* Dividers — hairline only */
+    /* Dividers -- hairline only */
     hr {{
         border-color: {THEME['border']};
         margin: 1rem 0;
     }}
 
-    /* Toast / info / warning / error — muted, not loud */
+    /* Toast / info / warning / error -- muted, not loud */
     .stAlert {{
         border-radius: 6px;
         border-width: 1px;
@@ -613,7 +615,7 @@ background-color: {THEME[‘bg_primary’]};
         font-weight: 600;
     }}
 
-    /* Headings — tighter, more refined */
+    /* Headings -- tighter, more refined */
     h1, h2, h3, h4, h5, h6 {{
         color: {THEME['text_primary']};
         font-weight: 600;
@@ -625,7 +627,7 @@ background-color: {THEME[‘bg_primary’]};
         color: {THEME['text_muted']};
     }}
 
-    /* Text inputs — cleaner */
+    /* Text inputs -- cleaner */
     .stTextInput input, .stTextArea textarea {{
         background: {THEME['bg_card']};
         border: 1px solid {THEME['border_strong']};
@@ -661,34 +663,34 @@ st.markdown(f’<div class="section-header">{text}</div>’, unsafe_allow_html=T
 
 # =============================================================================
 
-# MODULE 1 — EXECUTIVE DASHBOARD
+# MODULE 1 – EXECUTIVE DASHBOARD
 
 # =============================================================================
 
 def render_executive_dashboard():
 “”“High-level KPI overview pulling live from all tables.”””
-section_header(“Executive Dashboard · Live Metrics”)
+section_header(“Executive Dashboard - Live Metrics”)
 
 ```
-# — Revenue at risk: clients with margin_status = 'Leaking'
+# -- Revenue at risk: clients with margin_status = 'Leaking'
 clients = load_table("client_roster")
 leaking = clients[clients["margin_status"] == "Leaking"] if not clients.empty else pd.DataFrame()
 leaking_count = len(leaking)
 total_clients = len(clients)
 
-# — Open incidents
+# -- Open incidents
 incidents = load_table("incidents_log")
 open_incidents = incidents[
     incidents["mitigation_status"].isin(["Open", "In Progress"])
 ] if not incidents.empty else pd.DataFrame()
 
-# — Active change requests
+# -- Active change requests
 changes = load_table("change_pipeline")
 active_changes = changes[
     ~changes["stage"].isin(["Complete", "Cancelled"])
 ] if not changes.empty else pd.DataFrame()
 
-# — Active RFPs
+# -- Active RFPs
 rfps = load_table("active_rfps")
 active_rfps = rfps[
     rfps["status"].isin(["Draft", "In Progress", "Submitted"])
@@ -703,7 +705,7 @@ c4.metric("Active RFPs", len(active_rfps))
 
 st.divider()
 
-# — Secondary metrics row
+# -- Secondary metrics row
 ops = load_table("ops_friction")
 total_manual_hrs = ops["manual_hours_per_week"].sum() if not ops.empty else 0
 
@@ -735,7 +737,7 @@ c6.metric("Blocked Projects", len(blocked))
 c7.metric("Stuck > 5 Days", len(stuck_gt_5))
 c8.metric("Near Misses (Leading)", len(near_misses))
 
-# — Third metrics row: actions & stakeholders
+# -- Third metrics row: actions & stakeholders
 actions = load_table("action_items")
 open_actions = actions[actions["status"].isin(["Open", "In Progress"])] if not actions.empty else pd.DataFrame()
 overdue_actions = pd.DataFrame()
@@ -756,7 +758,7 @@ c12.metric("Known Blockers", len(blockers_sh))
 
 st.divider()
 
-# — Quick tables
+# -- Quick tables
 col_left, col_right = st.columns(2)
 
 with col_left:
@@ -771,7 +773,7 @@ with col_left:
         st.info("No clients flagged as leaking. Portfolio is healthy.")
 
 with col_right:
-    section_header("Near Misses — Leading Risk Indicators")
+    section_header("Near Misses -- Leading Risk Indicators")
     if not near_misses.empty:
         st.dataframe(
             near_misses[["event_date", "impact_level", "root_cause", "mitigation_status"]],
@@ -784,13 +786,13 @@ with col_right:
 
 # =============================================================================
 
-# MODULE 2 — COMMERCIALS & REPRICING
+# MODULE 2 – COMMERCIALS & REPRICING
 
 # =============================================================================
 
 def render_commercials():
 “”“Client roster management with margin status tracking.”””
-section_header(“Commercials & Repricing · Client Roster”)
+section_header(“Commercials & Repricing - Client Roster”)
 
 ```
 st.caption(
@@ -839,7 +841,7 @@ if not df.empty:
 
 # =============================================================================
 
-# MODULE 3 — RFP & PIPELINE MANAGEMENT
+# MODULE 3 – RFP & PIPELINE MANAGEMENT
 
 # =============================================================================
 
@@ -908,7 +910,7 @@ with tab_library:
 
 # --- FTS5 Library Search ---
 with tab_search:
-    section_header("Full-Text Search · RFP Golden Answers")
+    section_header("Full-Text Search - RFP Golden Answers")
     st.caption(
         "Search across categories, questions, and answers using SQLite FTS5. "
         "Supports prefix matching and multi-word queries."
@@ -930,14 +932,14 @@ with tab_search:
                     expanded=False,
                 ):
                     st.markdown(f"**Answer:** {row.get('golden_answer', '')}")
-                    st.caption(f"Library ID: {row.get('id', '')} · Relevance: {row.get('relevance_score', 0):.4f}")
+                    st.caption(f"Library ID: {row.get('id', '')} - Relevance: {row.get('relevance_score', 0):.4f}")
         else:
             st.warning(f"No results for '{search_query}'. Try broader terms or check the Library tab has entries.")
 ```
 
 # =============================================================================
 
-# MODULE 4 — CLIENT CHANGE & ONBOARDING
+# MODULE 4 – CLIENT CHANGE & ONBOARDING
 
 # =============================================================================
 
@@ -956,7 +958,7 @@ df_edit = df[edit_cols].copy() if not df.empty else pd.DataFrame(columns=edit_co
 
 st.caption(
     "Set **Blocked Since** to a date when a blocker is assigned. "
-    "Days stuck is computed automatically — no manual counting."
+    "Days stuck is computed automatically -- no manual counting."
 )
 
 edited = st.data_editor(
@@ -1014,7 +1016,7 @@ if not df_edit.empty:
         else:
             st.info("No active blockers. Pipeline is flowing.")
     with col2:
-        section_header("Accountability Timer — Stuck > 5 Days")
+        section_header("Accountability Timer -- Stuck > 5 Days")
         stuck = display_df[display_df["days_stuck"] > 5].sort_values("days_stuck", ascending=False)
         if not stuck.empty:
             st.dataframe(
@@ -1028,7 +1030,7 @@ if not df_edit.empty:
 
 # =============================================================================
 
-# MODULE 5 — RISK & QUALITY
+# MODULE 5 – RISK & QUALITY
 
 # =============================================================================
 
@@ -1076,7 +1078,7 @@ with tab_incidents:
         near_misses = df[df["type"] == "Near Miss"]
         if not near_misses.empty:
             st.warning(
-                f"⚠️  **{len(near_misses)} Near Miss(es)** detected — "
+                f"⚠️  **{len(near_misses)} Near Miss(es)** detected -- "
                 "these are leading indicators of systemic risk. Investigate root causes."
             )
             st.dataframe(
@@ -1132,7 +1134,7 @@ with tab_friction:
 
 # =============================================================================
 
-# MODULE 6 — LLM EXPORT & REPORTING
+# MODULE 6 – LLM EXPORT & REPORTING
 
 # =============================================================================
 
@@ -1161,7 +1163,7 @@ open_inc = incidents[
     incidents["mitigation_status"].isin(["Open", "In Progress"])
 ] if not incidents.empty else pd.DataFrame()
 
-# Active changes — enrich with computed days_stuck
+# Active changes -- enrich with computed days_stuck
 changes = load_table("change_pipeline")
 active_chg = changes[
     ~changes["stage"].isin(["Complete", "Cancelled"])
@@ -1238,7 +1240,7 @@ return LLM_PROMPT_PREFIX + json_str
 
 def render_llm_export():
 “”“LLM export panel with copy-to-clipboard functionality.”””
-section_header(“LLM Brain Export · Copy → Paste → Analyse”)
+section_header(“LLM Brain Export - Copy -> Paste -> Analyse”)
 
 ```
 export_text = build_llm_export()
@@ -1261,7 +1263,7 @@ st.caption(
 
 # =============================================================================
 
-# MODULE 7 — WEEKLY UPDATE GENERATOR (NATIVE)
+# MODULE 7 – WEEKLY UPDATE GENERATOR (NATIVE)
 
 # =============================================================================
 
@@ -1314,7 +1316,7 @@ total_manual = ops["manual_hours_per_week"].sum() if not ops.empty else 0
 near_misses = incidents[incidents["type"] == "Near Miss"] if not incidents.empty else pd.DataFrame()
 
 # Build markdown
-md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.strftime('%d %b %Y')}
+md = f"""# Weekly Product Update -- {week_start.strftime('%d %b')} to {today.strftime('%d %b %Y')}
 ```
 
 -----
@@ -1326,7 +1328,7 @@ md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.st
   “””
   if not leaking.empty:
   for _, r in leaking.iterrows():
-  md += f”  - {r[‘client_name’]} — {r[‘fee_bps’]} bps, last repriced {r.get(‘last_reprice_date’, ‘N/A’)}\n”
+  md += f”  - {r[‘client_name’]} – {r[‘fee_bps’]} bps, last repriced {r.get(‘last_reprice_date’, ‘N/A’)}\n”
   
   md += f”””
 
@@ -1336,7 +1338,7 @@ md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.st
   “””
   if not active_rfps.empty:
   for _, r in active_rfps.iterrows():
-  md += f”  - {r[‘prospect_name’]} — {r[‘status’]} ({r[‘probability’]:.0f}% win probability)\n”
+  md += f”  - {r[‘prospect_name’]} – {r[‘status’]} ({r[‘probability’]:.0f}% win probability)\n”
   
   md += f”””
 
@@ -1347,7 +1349,7 @@ md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.st
   “””
   if not blocked.empty:
   for _, r in blocked.iterrows():
-  md += f”  - {r[‘project_name’]} — blocked by **{r[‘blocker_dept’]}** ({r[‘days_stuck’]} days)\n”
+  md += f”  - {r[‘project_name’]} – blocked by **{r[‘blocker_dept’]}** ({r[‘days_stuck’]} days)\n”
   
   md += f”””
 
@@ -1358,7 +1360,7 @@ md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.st
   “””
   if not open_inc.empty:
   for _, r in open_inc.iterrows():
-  md += f”  - [{r[‘type’]}] {r.get(‘root_cause’, ‘TBC’)} — {r[‘impact_level’]} impact, {r[‘mitigation_status’]}\n”
+  md += f”  - [{r[‘type’]}] {r.get(‘root_cause’, ‘TBC’)} – {r[‘impact_level’]} impact, {r[‘mitigation_status’]}\n”
   
   md += f”””
 
@@ -1369,7 +1371,7 @@ md = f"""# Weekly Product Update — {week_start.strftime('%d %b')} to {today.st
   if not ops.empty:
   top_friction = ops.sort_values(“manual_hours_per_week”, ascending=False).head(3)
   for _, r in top_friction.iterrows():
-  md += f”  - {r[‘process_name’]} — {r[‘manual_hours_per_week’]:.1f}h/wk → Fix: {r.get(‘systemic_fix_idea’, ‘TBD’)}\n”
+  md += f”  - {r[‘process_name’]} – {r[‘manual_hours_per_week’]:.1f}h/wk -> Fix: {r.get(‘systemic_fix_idea’, ‘TBD’)}\n”
   
   md += “””
 
@@ -1497,7 +1499,7 @@ return {
 
 # =============================================================================
 
-# DOCUMENT GENERATION — Word (.docx) via Node.js docx library
+# DOCUMENT GENERATION – Word (.docx) via Node.js docx library
 
 # =============================================================================
 
@@ -1717,7 +1719,7 @@ finally:
 
 # =============================================================================
 
-# DOCUMENT GENERATION — PowerPoint (.pptx) via pptxgenjs
+# DOCUMENT GENERATION – PowerPoint (.pptx) via pptxgenjs
 
 # =============================================================================
 
@@ -1943,16 +1945,16 @@ finally:
 
 # =============================================================================
 
-# MODULE 9 — DAILY STANDUP VIEW
+# MODULE 9 – DAILY STANDUP VIEW
 
 # =============================================================================
 
 def render_daily_standup():
 “””
 Single-screen morning briefing: what needs attention TODAY.
-No clicks required — everything surfaces automatically.
+No clicks required – everything surfaces automatically.
 “””
-section_header(“Daily Standup · Morning Briefing”)
+section_header(“Daily Standup - Morning Briefing”)
 
 ```
 today = date.today()
@@ -2035,9 +2037,9 @@ if not meetings.empty:
 # KPI alert bar
 alert_count = len(overdue) + len(recent_incidents) + len(stuck_items)
 if alert_count > 0:
-    st.error(f"🔴  **{alert_count} items need attention today** — overdue actions, recent incidents, or stuck projects.")
+    st.error(f"🔴  **{alert_count} items need attention today** -- overdue actions, recent incidents, or stuck projects.")
 else:
-    st.success("🟢  Clean slate — no escalations, no overdue items. Good day to push strategic work forward.")
+    st.success("🟢  Clean slate -- no escalations, no overdue items. Good day to push strategic work forward.")
 
 st.divider()
 
@@ -2050,8 +2052,8 @@ with col_left:
     if not overdue.empty:
         for _, r in overdue.iterrows():
             st.markdown(
-                f"**{r.get('task', '')}** · Owner: {r.get('owner', 'Unassigned')} · "
-                f"Due: {r.get('due_date', '?')} · Priority: {r.get('priority', 'Medium')}"
+                f"**{r.get('task', '')}** - Owner: {r.get('owner', 'Unassigned')} - "
+                f"Due: {r.get('due_date', '?')} - Priority: {r.get('priority', 'Medium')}"
             )
     else:
         st.info("Nothing overdue.")
@@ -2061,7 +2063,7 @@ with col_left:
     if not due_today.empty:
         for _, r in due_today.iterrows():
             st.markdown(
-                f"**{r.get('task', '')}** · Owner: {r.get('owner', 'Unassigned')} · "
+                f"**{r.get('task', '')}** - Owner: {r.get('owner', 'Unassigned')} - "
                 f"Priority: {r.get('priority', 'Medium')}"
             )
     else:
@@ -2072,7 +2074,7 @@ with col_left:
     if not due_this_week.empty:
         for _, r in due_this_week.iterrows():
             st.markdown(
-                f"**{r.get('task', '')}** · {r.get('owner', 'Unassigned')} · "
+                f"**{r.get('task', '')}** - {r.get('owner', 'Unassigned')} - "
                 f"Due: {r.get('due_date', '?')}"
             )
     else:
@@ -2084,8 +2086,8 @@ with col_right:
     if not recent_incidents.empty:
         for _, r in recent_incidents.iterrows():
             st.markdown(
-                f"**[{r.get('type', '')}]** {r.get('root_cause', 'TBC')} · "
-                f"{r.get('impact_level', '?')} impact · {r.get('mitigation_status', '?')}"
+                f"**[{r.get('type', '')}]** {r.get('root_cause', 'TBC')} - "
+                f"{r.get('impact_level', '?')} impact - {r.get('mitigation_status', '?')}"
             )
     else:
         st.info("No recent incidents. Quiet night.")
@@ -2095,7 +2097,7 @@ with col_right:
     if not stuck_items.empty:
         for _, r in stuck_items.iterrows():
             st.markdown(
-                f"**{r.get('project_name', '')}** · Blocked by **{r.get('blocker_dept', '?')}** · "
+                f"**{r.get('project_name', '')}** - Blocked by **{r.get('blocker_dept', '?')}** - "
                 f"{r.get('days_stuck', 0)} days"
             )
     else:
@@ -2106,7 +2108,7 @@ with col_right:
     if not urgent_rfps.empty:
         for _, r in urgent_rfps.iterrows():
             st.markdown(
-                f"**{r.get('prospect_name', '')}** · Due: {r.get('due_date', '?')} · "
+                f"**{r.get('prospect_name', '')}** - Due: {r.get('due_date', '?')} - "
                 f"{r.get('status', '?')} ({r.get('probability', 0):.0f}%)"
             )
     else:
@@ -2123,8 +2125,8 @@ with col_b1:
         for _, r in cold_stakeholders.iterrows():
             days_cold = (today - r["last_parsed"].date()).days if pd.notna(r.get("last_parsed")) else "?"
             st.markdown(
-                f"**{r.get('name', '')}** ({r.get('role', '')}, {r.get('department', '')}) · "
-                f"Last contact: {days_cold} days ago · "
+                f"**{r.get('name', '')}** ({r.get('role', '')}, {r.get('department', '')}) - "
+                f"Last contact: {days_cold} days ago - "
                 f"Disposition: {r.get('disposition', '?')}"
             )
     else:
@@ -2135,7 +2137,7 @@ with col_b2:
     if not todays_meetings.empty:
         for _, r in todays_meetings.iterrows():
             st.markdown(
-                f"**{r.get('title', '')}** · {r.get('meeting_type', '')} · "
+                f"**{r.get('title', '')}** - {r.get('meeting_type', '')} - "
                 f"Attendees: {r.get('attendees', 'TBC')}"
             )
     else:
@@ -2144,7 +2146,7 @@ with col_b2:
 
 # =============================================================================
 
-# MODULE 10 — ACTION ITEMS
+# MODULE 10 – ACTION ITEMS
 
 # =============================================================================
 
@@ -2181,8 +2183,8 @@ task_label, old_status = row
             datetime.now().isoformat(),
             "action_items",
             "UPDATE",
-            f"action_items → {task_label}",
-            f"status: '{old_status}' → '{new_status}'",
+            f"action_items -> {task_label}",
+            f"status: '{old_status}' -> '{new_status}'",
         ),
     )
     conn.commit()
@@ -2208,7 +2210,7 @@ cur.execute(
 datetime.now().isoformat(),
 “action_items”,
 “INSERT”,
-f”action_items → {task}”,
+f”action_items -> {task}”,
 “”,
 ),
 )
@@ -2229,7 +2231,7 @@ def _render_kanban_card(row: pd.Series, today: date):
 “”“Render a single Kanban card with action buttons to move between columns.”””
 task = row.get(“task”, “”)
 task_id = int(row[“id”])
-owner = row.get(“owner”, “—”) or “—”
+owner = row.get(“owner”, “–”) or “–”
 due = row.get(“due_date”, “”)
 priority = row.get(“priority”, “Medium”) or “Medium”
 status = row.get(“status”, “Open”)
@@ -2273,7 +2275,7 @@ else:
     due_display = "No due date"
 
 # Card body
-linked_str = f"{linked_table} · {linked_record}" if linked_table else ""
+linked_str = f"{linked_table} - {linked_record}" if linked_table else ""
 
 card_html = f"""
 <div style="
@@ -2289,18 +2291,18 @@ card_html = f"""
         {task}
     </div>
     <div style="color: {THEME['text_secondary']}; font-size: 0.78rem; margin-bottom: 4px;">
-        <strong>{owner}</strong> · <span style="font-family: 'JetBrains Mono', monospace;">{_priority_indicator(priority)}</span> {priority}
+        <strong>{owner}</strong> - <span style="font-family: 'JetBrains Mono', monospace;">{_priority_indicator(priority)}</span> {priority}
     </div>
     <div style="color: {THEME['text_muted']}; font-size: 0.76rem; margin-bottom: 2px;">
         {due_display}
     </div>
-    {f'<div style="color: {THEME["text_muted"]}; font-size: 0.72rem; font-style: italic;">↳ {linked_str}</div>' if linked_str else ''}
+    {f'<div style="color: {THEME["text_muted"]}; font-size: 0.72rem; font-style: italic;">> {linked_str}</div>' if linked_str else ''}
     {f'<div style="color: {THEME["text_muted"]}; font-size: 0.72rem;">from: {source}</div>' if source else ''}
 </div>
 """
 st.markdown(card_html, unsafe_allow_html=True)
 
-# Move buttons — compact row beneath each card
+# Move buttons -- compact row beneath each card
 status_options = ["Open", "In Progress", "Done", "Cancelled"]
 other_statuses = [s for s in status_options if s != status]
 
@@ -2326,7 +2328,7 @@ for i, new_status in enumerate(other_statuses):
 
 def render_action_items():
 “”“Task-level tracking with Kanban board + bulk editor fallback.”””
-section_header(“Action Items · Task Tracker”)
+section_header(“Action Items - Task Tracker”)
 
 ```
 tab_kanban, tab_editor, tab_all = st.tabs(
@@ -2340,7 +2342,7 @@ today = date.today()
 with tab_kanban:
     st.caption(
         "Drag work through the stages by clicking the status buttons on each card. "
-        "Red border = overdue · Amber border = due today or critical priority."
+        "Red border = overdue - Amber border = due today or critical priority."
     )
 
     # --- Quick add bar ---
@@ -2509,7 +2511,7 @@ with tab_kanban:
 with tab_editor:
     st.caption(
         "Spreadsheet-style editor for bulk entry, re-assignments, or edits you can't easily do on the board. "
-        "Filters to open items only — use the Archive tab for completed work."
+        "Filters to open items only -- use the Archive tab for completed work."
     )
 
     if not df.empty:
@@ -2601,13 +2603,13 @@ with tab_all:
 
 # =============================================================================
 
-# MODULE 11 — MEETING NOTES
+# MODULE 11 – MEETING NOTES
 
 # =============================================================================
 
 def render_meeting_notes():
-“”“Institutional memory — searchable log of meetings, decisions, and actions.”””
-section_header(“Meeting Notes · Institutional Memory”)
+“”“Institutional memory – searchable log of meetings, decisions, and actions.”””
+section_header(“Meeting Notes - Institutional Memory”)
 
 ```
 tab_log, tab_add = st.tabs(["📋 Meeting Log", "➕ Quick Add"])
@@ -2719,7 +2721,7 @@ with tab_add:
 
 # =============================================================================
 
-# MODULE 12 — STAKEHOLDER TRACKER & JERSEY GUIDE
+# MODULE 12 – STAKEHOLDER TRACKER & JERSEY GUIDE
 
 # =============================================================================
 
@@ -2727,20 +2729,20 @@ with tab_add:
 
 # 1-9:   Key Decision Makers / C-Suite (the ones who sign things off)
 
-# 10-19:  Sponsors & Advocates (your allies — protect these relationships)
+# 10-19:  Sponsors & Advocates (your allies – protect these relationships)
 
-# 20-29:  Neutral / Swing votes (could go either way — invest here)
+# 20-29:  Neutral / Swing votes (could go either way – invest here)
 
 # 30-39:  Sceptics (need evidence, not persuasion)
 
 # 40-49:  Blockers (know their objections, plan around them)
 
 JERSEY_BANDS = {
-“1–9”: {“label”: “Key Decision Makers”, “colour”: THEME[“accent_cyan”], “desc”: “C-suite, board, fund directors. The ones who sign things off.”},
-“10–19”: {“label”: “Sponsors & Advocates”, “colour”: THEME[“accent_green”], “desc”: “Your allies. Protect and invest in these relationships.”},
-“20–29”: {“label”: “Neutral / Swing Votes”, “colour”: THEME[“accent_amber”], “desc”: “Could go either way. Target for proactive engagement.”},
-“30–39”: {“label”: “Sceptics”, “colour”: THEME[“accent_purple”], “desc”: “Need evidence and data, not persuasion. Respect their rigour.”},
-“40–49”: {“label”: “Blockers”, “colour”: THEME[“accent_red”], “desc”: “Know their objections. Plan around them, don’t fight head-on.”},
+“1-9”: {“label”: “Key Decision Makers”, “colour”: THEME[“accent_cyan”], “desc”: “C-suite, board, fund directors. The ones who sign things off.”},
+“10-19”: {“label”: “Sponsors & Advocates”, “colour”: THEME[“accent_green”], “desc”: “Your allies. Protect and invest in these relationships.”},
+“20-29”: {“label”: “Neutral / Swing Votes”, “colour”: THEME[“accent_amber”], “desc”: “Could go either way. Target for proactive engagement.”},
+“30-39”: {“label”: “Sceptics”, “colour”: THEME[“accent_purple”], “desc”: “Need evidence and data, not persuasion. Respect their rigour.”},
+“40-49”: {“label”: “Blockers”, “colour”: THEME[“accent_red”], “desc”: “Know their objections. Plan around them, don’t fight head-on.”},
 }
 
 def _jersey_band(number):
@@ -2749,15 +2751,15 @@ if pd.isna(number):
 return “Unassigned”
 n = int(number)
 if 1 <= n <= 9:
-return “1–9 · Key Decision Makers”
+return “1-9 - Key Decision Makers”
 elif 10 <= n <= 19:
-return “10–19 · Sponsors & Advocates”
+return “10-19 - Sponsors & Advocates”
 elif 20 <= n <= 29:
-return “20–29 · Neutral / Swing Votes”
+return “20-29 - Neutral / Swing Votes”
 elif 30 <= n <= 39:
-return “30–39 · Sceptics”
+return “30-39 - Sceptics”
 elif 40 <= n <= 49:
-return “40–49 · Blockers”
+return “40-49 - Blockers”
 return “Other”
 
 def _disposition_emoji(disp):
@@ -2809,9 +2811,9 @@ return
     )
 
     # Audit entry
-    changes = [f"last_interaction_date: '{old_date}' → '{contact_date}'"]
+    changes = [f"last_interaction_date: '{old_date}' -> '{contact_date}'"]
     if channel != old_channel:
-        changes.append(f"preferred_channel: '{old_channel}' → '{channel}'")
+        changes.append(f"preferred_channel: '{old_channel}' -> '{channel}'")
     if note.strip():
         changes.append(f"note added: '{note.strip()[:60]}'")
 
@@ -2822,7 +2824,7 @@ return
             datetime.now().isoformat(),
             "stakeholders",
             "UPDATE",
-            f"stakeholders → {name}",
+            f"stakeholders -> {name}",
             "; ".join(changes),
         ),
     )
@@ -2833,7 +2835,7 @@ finally:
 
 def render_stakeholder_tracker():
 “””
-Political landscape mapper — who matters, where they stand, and
+Political landscape mapper – who matters, where they stand, and
 jersey numbers for quick reference in governance contexts.
 “””
 tab_log, tab_roster, tab_jerseys, tab_map = st.tabs(
@@ -2844,7 +2846,7 @@ tab_log, tab_roster, tab_jerseys, tab_map = st.tabs(
 df = load_table("stakeholders")
 today = date.today()
 
-# =========== LOG CONTACT — fast-path for daily use ===========
+# =========== LOG CONTACT -- fast-path for daily use ===========
 with tab_log:
     section_header("Log Stakeholder Contact")
     st.caption(
@@ -2971,11 +2973,11 @@ with tab_log:
                         <div style="font-weight: 500; color: {THEME['text_primary']}; font-size: 0.92rem;">
                             {jersey_badge}{name}
                             <span style="color: {THEME['text_muted']}; font-weight: 400; font-size: 0.85rem;">
-                                · {role}{' · ' + dept if dept else ''}
+                                - {role}{' - ' + dept if dept else ''}
                             </span>
                         </div>
                         <div style="color: {THEME['text_secondary']}; font-size: 0.78rem; margin-top: 4px;">
-                            {_disposition_emoji(disp)} {disp} · {influence} · prefers {pref_channel}
+                            {_disposition_emoji(disp)} {disp} - {influence} - prefers {pref_channel}
                             <span style="float:right; color: {age_color}; font-weight: 500;">
                                 {age_str}
                             </span>
@@ -3073,7 +3075,7 @@ with tab_jerseys:
     section_header("Jersey Number Guide")
     st.caption(
         "A private shorthand for stakeholder assessment. Use jersey numbers in conversation "
-        "or notes — only you know the coding scheme."
+        "or notes -- only you know the coding scheme."
     )
 
     # Explain the bands
@@ -3082,7 +3084,7 @@ with tab_jerseys:
             f'<div style="background:{band_info["colour"]}18; border-left: 4px solid {band_info["colour"]}; '
             f'padding: 12px 16px; margin-bottom: 8px; border-radius: 4px;">'
             f'<strong style="color:{band_info["colour"]}; font-family: JetBrains Mono, monospace;">'
-            f'#{band_key}</strong> — '
+            f'#{band_key}</strong> -- '
             f'<strong>{band_info["label"]}</strong><br/>'
             f'<span style="color:{THEME["text_secondary"]}; font-size: 0.88rem;">{band_info["desc"]}</span>'
             f'</div>',
@@ -3102,9 +3104,9 @@ with tab_jerseys:
             for _, r in assigned.iterrows():
                 emoji = _disposition_emoji(r.get("disposition", ""))
                 st.markdown(
-                    f"**#{int(r['jersey_number'])}** — {emoji} {r.get('name', '?')} "
-                    f"({r.get('role', '?')}, {r.get('department', '?')}) · "
-                    f"{r.get('disposition', '?')} · {r.get('influence_level', '?')}"
+                    f"**#{int(r['jersey_number'])}** -- {emoji} {r.get('name', '?')} "
+                    f"({r.get('role', '?')}, {r.get('department', '?')}) - "
+                    f"{r.get('disposition', '?')} - {r.get('influence_level', '?')}"
                 )
         else:
             st.info("No jersey numbers assigned yet. Edit the roster to add them.")
@@ -3112,7 +3114,7 @@ with tab_jerseys:
         st.info("Add stakeholders to the roster first, then assign jersey numbers.")
 
 with tab_map:
-    section_header("Influence × Disposition Map")
+    section_header("Influence x Disposition Map")
     st.caption(
         "Visual mapping of political landscape. Quadrant thinking: "
         "high-influence sponsors are your power base; high-influence blockers are your risk."
@@ -3145,7 +3147,7 @@ with tab_map:
                     else:
                         muted_color = THEME["text_muted"]
                         st.markdown(
-                            f"<span style='color:{muted_color}; font-size:0.82rem;'>—</span>",
+                            f"<span style='color:{muted_color}; font-size:0.82rem;'>--</span>",
                             unsafe_allow_html=True,
                         )
             st.divider()
@@ -3155,16 +3157,16 @@ with tab_map:
 
 # =============================================================================
 
-# MODULE 8 — AUDIT TRAIL
+# MODULE 8 – AUDIT TRAIL
 
 # =============================================================================
 
 def render_audit_trail():
 “””
-Searchable, filterable audit log — timestamped record of every data change.
+Searchable, filterable audit log – timestamped record of every data change.
 This is the receipts table. In a political environment, dates don’t lie.
 “””
-section_header(“Audit Trail · Change History”)
+section_header(“Audit Trail - Change History”)
 
 ```
 audit_df = load_table("audit_log")
